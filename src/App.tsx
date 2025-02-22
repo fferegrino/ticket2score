@@ -4,6 +4,7 @@ import { ModalsProvider, modals } from "@mantine/modals";
 import { Player } from "./components/Player";
 import { Scoreboard } from "./components/Scoreboard";
 import { ScoreEntry } from "./ScoreEntry";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface PlayerData {
   name: string;
@@ -56,6 +57,7 @@ function App() {
       ]);
     }
   };
+  const isMobile = useMediaQuery("(max-width: 1000px)");
 
   const removePlayer = () => {
     modals.openConfirmModal({
@@ -140,8 +142,8 @@ function App() {
         <Scoreboard players={players} />
 
         <SimpleGrid
-          cols={{ base: 1, sm: players.length, md: players.length }}
-          spacing="md"
+          cols={{ base: players.length, sm: players.length, md: players.length }}
+          spacing={isMobile ? "0" : "md"}
           mb="xl"
         >
           {players.map((player, index) => (

@@ -11,6 +11,7 @@ import {
   ComboboxItem,
   ActionIcon,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
 import { colorMap } from "../colors";
@@ -49,6 +50,9 @@ export function Player({
   const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>(() =>
     getStoredHistory(initialName),
   );
+
+  const isMobile = useMediaQuery("(max-width: 1000px)");
+  
 
   useEffect(() => {
     localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
@@ -102,7 +106,7 @@ export function Player({
   return (
     <Paper
       shadow="xs"
-      p="md"
+      p={isMobile ? "xs" : "md"}
       withBorder
       style={{ backgroundColor: background }}
     >
@@ -117,12 +121,13 @@ export function Player({
               color: darker,
               border: "none",
               fontWeight: "bold",
-              fontSize: "1.5rem",
+              fontSize: isMobile ? "1rem" : "1.5rem",
               padding: "0rem",
             },
           }}
         />
         <Select
+          size={isMobile ? "xs" : "md"}
           data={[
             { value: "red", label: "Red" },
             { value: "blue", label: "Blue" },
@@ -135,14 +140,14 @@ export function Player({
           style={{ flex: 2 }}
         />
       </Group>
-      <Group mb="md">
+      <Group mb={isMobile ? "xs" : "xs"} gap={isMobile ? "5" : "8"}>
         {[1, 2, 3, 4, 5, 6].map((length) => (
           <Button
             key={length}
             variant={trackPoints === length ? "filled" : "light"}
             onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
             size="xs"
-            style={{ backgroundColor: button, color: text }}
+            style={{ backgroundColor: button, color: text, fontSize: isMobile ? "0.75rem" : "1rem", padding: isMobile ? "0.5rem" : "0.5rem" }}
           >
             {length}
           </Button>
@@ -182,7 +187,7 @@ export function Player({
                 >
                   <Group>
                     <Text
-                      size="xl"
+                      size={isMobile ? "md" : "xl"}
                       style={{ color: darker, fontWeight: "bold" }}
                     >
                       {entry.points} carts

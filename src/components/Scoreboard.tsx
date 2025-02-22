@@ -20,9 +20,9 @@ export function Scoreboard({ players }: ScoreboardProps) {
   return (
     <Paper
       shadow="xs"
-      p={isMobile ? "xs" : "md"}
+      p={isMobile ? "0" : "md"}
       withBorder
-      mb={isMobile ? "md" : "xl"}
+      mb={isMobile ? "0" : "xl"}
     >
       <Table>
         <Table.Thead
