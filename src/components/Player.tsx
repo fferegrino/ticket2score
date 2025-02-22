@@ -1,18 +1,25 @@
 import { useState } from 'react';
-import { TextInput, Button, Paper, Group, NumberInput, Text } from '@mantine/core';
+import { TextInput, Button, Paper, Group, NumberInput, Text, List, ScrollArea } from '@mantine/core';
 
 interface PlayerProps {
   initialName: string;
   onNameChange: (name: string) => void;
 }
 
+interface ScoreEntry {
+  points: number;
+  timestamp: Date;
+}
+
 export function Player({ initialName, onNameChange }: PlayerProps) {
   const [name, setName] = useState(initialName);
   const [score, setScore] = useState(0);
   const [trackPoints, setTrackPoints] = useState(0);
+  const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>([]);
 
   const handleAddPoints = () => {
     setScore(prev => prev + trackPoints);
+    setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
     setTrackPoints(0);
   };
 
@@ -46,6 +53,20 @@ export function Player({ initialName, onNameChange }: PlayerProps) {
           Add Points
         </Button>
       </Group>
+      
+      <ScrollArea h={150} mt="md">
+        <List spacing="xs" size="sm" center>
+          {scoreHistory.length === 0 ? (
+            <Text c="dimmed" ta="center" fz="sm">No points added yet</Text>
+          ) : (
+            scoreHistory.map((entry, index) => (
+              <List.Item key={index}>
+                +{entry.points} points ({entry.timestamp.toLocaleTimeString()})
+              </List.Item>
+            )).reverse()
+          )}
+        </List>
+      </ScrollArea>
     </Paper>
   );
 } 

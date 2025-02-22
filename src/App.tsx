@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Container, Title, Stack, Button, Group } from '@mantine/core'
+import { Container, Title, SimpleGrid, Button, Group } from '@mantine/core'
 import { Player } from './components/Player'
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
   };
 
   return (
-    <Container size="md" py="xl">
+    <Container size="xl" py="xl">
       <Title ta="center" mb="xl">
         Ticket to Ride Score Tracker
       </Title>
@@ -38,7 +38,7 @@ function App() {
         </Button>
       </Group>
 
-      <Stack gap="md">
+      <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
         {players.map((player, index) => (
           <Player
             key={index}
@@ -46,7 +46,7 @@ function App() {
             onNameChange={(name) => handleNameChange(index, name)}
           />
         ))}
-      </Stack>
+      </SimpleGrid>
     </Container>
   )
 }
