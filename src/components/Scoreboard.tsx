@@ -29,13 +29,15 @@ export function Scoreboard({ players }: ScoreboardProps) {
         <Table.Tbody>
           {sortedPlayers.map((player, index) => (
             <Table.Tr key={player.name}>
-              <Table.Td>{index + 1}</Table.Td>
-              <Table.Td>
-                <Text style={{ color: player.color || 'inherit' }}>
+              <Table.Td style={{ backgroundColor: player.color || 'inherit' }}>{index + 1}</Table.Td>
+              <Table.Td style={{ backgroundColor: player.color || 'inherit' }}>
+                <Text>
                   {player.name}
                 </Text>
               </Table.Td>
-              <Table.Td ta="right">{player.score}</Table.Td>
+              <Table.Td ta="right" style={{ backgroundColor: player.color || 'inherit' }}>
+                {player.score}
+              </Table.Td>
             </Table.Tr>
           ))}
         </Table.Tbody>
