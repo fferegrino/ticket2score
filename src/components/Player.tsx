@@ -25,6 +25,8 @@ interface PlayerProps {
   onScoreChange: (scoreEntries: ScoreEntry[]) => void;
 }
 
+const BUTTONS = [1, 2, 3, 4, 5, 6];
+
 const getStoredHistory = (playerName: string): ScoreEntry[] => {
   const stored = localStorage.getItem(`scoreHistory_${playerName}`);
   if (stored) {
@@ -102,6 +104,15 @@ export function Player({
   const { background, button, text, darker } =
     colorMap[selectedColor] || colorMap["black"];
 
+  const chunkedButtons = BUTTONS.reduce((acc, button, index) => {
+    const chunkIndex = Math.floor(index / 3);
+    if (!acc[chunkIndex]) {
+      acc[chunkIndex] = [];
+    }
+    acc[chunkIndex].push(button);
+    return acc;
+  }, [] as number[][]);
+
   return (
     <Paper
       shadow={isMobile ? "none" : "xs"}
@@ -110,38 +121,27 @@ export function Player({
       withBorder={isMobile ? false : true}
       style={{ backgroundColor: background }}
     >
-      <Group align="flex-end" mb="md">
-        <TextInput
-          value={name}
-          onChange={(e) => handleNameChange(e.target.value)}
-          styles={{
-            root: { flex: 3 },
-            input: {
-              background: background,
-              color: darker,
-              border: "none",
-              fontWeight: "bold",
-              fontSize: isMobile ? "0.7rem" : "1.5rem",
-              padding: "0rem",
-            },
-          }}
-        />
-        <Select
-          size={isMobile ? "xs" : "md"}
-          data={[
-            { value: "red", label: "Red" },
-            { value: "blue", label: "Blue" },
-            { value: "green", label: "Green" },
-            { value: "yellow", label: "Yellow" },
-            { value: "black", label: "Black" },
-          ]}
-          onChange={handleColorChange}
-          value={selectedColor}
-          style={{ flex: isMobile ? 3 : 2 }}
-        />
-      </Group>
-      <Group mb={isMobile ? "xs" : "xs"} gap={isMobile ? "5" : "8"}>
-        {[1, 2, 3, 4, 5, 6].map((length) => (
+      <TextInput
+        value={name}
+        onChange={(e) => handleNameChange(e.target.value)}
+        mb={isMobile ? "xs" : "xs"}
+        styles={{
+          root: { flex: 3 },
+          input: {
+            background: background,
+            color: darker,
+            border: "none",
+            fontWeight: "bold",
+            fontSize: isMobile ? "1rem" : "1.5rem",
+            padding: "0rem",
+          },
+        }}
+      />
+      <Button.Group
+        mb={isMobile ? "xs" : "xs"}
+        style={{ display: isMobile ? "none" : "block" }}
+      >
+        {BUTTONS.map((length) => (
           <Button
             key={length}
             variant={trackPoints === length ? "filled" : "light"}
@@ -156,6 +156,34 @@ export function Player({
           >
             {length}
           </Button>
+        ))}
+      </Button.Group>
+      <Group
+        mb={isMobile ? "xs" : "xs"}
+        gap="2"
+        style={{ display: isMobile ? "flex" : "none" }}
+      >
+        {chunkedButtons.map((chunk, index) => (
+          <Button.Group key={index}>
+            {chunk.map((length) => (
+              <Button
+                key={length}
+                variant={trackPoints === length ? "filled" : "light"}
+                onClick={() =>
+                  setTrackPoints(trackPoints === length ? 0 : length)
+                }
+                size="xs"
+                style={{
+                  backgroundColor: button,
+                  color: text,
+                  fontSize: isMobile ? "0.75rem" : "1rem",
+                  padding: isMobile ? "0.5rem" : "0.5rem",
+                }}
+              >
+                {length}
+              </Button>
+            ))}
+          </Button.Group>
         ))}
       </Group>
       <Button
@@ -192,8 +220,11 @@ export function Player({
                 >
                   <Group>
                     <Text
-                      size={isMobile ? "xs" : "xl"}
+                      size={isMobile ? "sm" : "xl"}
                       style={{ color: darker, fontWeight: "bold" }}
+                      onClick={() =>
+                        handleDeleteEntry(scoreHistory.length - 1 - index)
+                      }
                     >
                       {entry.points} carts
                     </Text>
@@ -201,6 +232,8 @@ export function Player({
                       ({entry.timestamp.toLocaleTimeString()})
                     </Text> */}
                     <ActionIcon
+                      hidden={isMobile}
+                      style={{ display: isMobile ? "none" : "block" }}
                       color={button}
                       onClick={() =>
                         handleDeleteEntry(scoreHistory.length - 1 - index)
@@ -216,6 +249,19 @@ export function Player({
           )}
         </List>
       </ScrollArea>
+      <Select
+        size={isMobile ? "xs" : "md"}
+        data={[
+          { value: "red", label: "Red" },
+          { value: "blue", label: "Blue" },
+          { value: "green", label: "Green" },
+          { value: "yellow", label: "Yellow" },
+          { value: "black", label: "Black" },
+        ]}
+        onChange={handleColorChange}
+        value={selectedColor}
+        style={{ flex: isMobile ? 3 : 2 }}
+      />
     </Paper>
   );
 }

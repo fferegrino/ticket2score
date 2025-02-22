@@ -24,7 +24,7 @@ export function Scoreboard({ players }: ScoreboardProps) {
       withBorder={isMobile ? false : true}
       mb={isMobile ? "0" : "xl"}
     >
-      <Table>
+      <Table style={{ borderBottom: isMobile ? "1px solid #000" : "none" }}>
         <Table.Thead
           style={{ display: isMobile ? "none" : "table-header-group" }}
         >
