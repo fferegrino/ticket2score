@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TextInput, Button, Paper, Group, Text, List, ScrollArea, Select, ComboboxItem, ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
+import { colorMap } from '../colors';
 
 interface PlayerProps {
   initialName: string;
@@ -75,9 +76,13 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
       localStorage.removeItem(`scoreHistory_${oldName}`);
     }
   };
+  
+  const {
+    background, button,text
+  } = colorMap[selectedColor] || colorMap['black']
 
   return (
-    <Paper shadow="xs" p="md" withBorder style={{ backgroundColor: selectedColor || 'white' }}>
+    <Paper shadow="xs" p="md" withBorder style={{ backgroundColor: background }}>
       <Group align="flex-end" mb="md">
         <TextInput
           label="Player Name"
@@ -88,11 +93,11 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
         <Select
           label="Color"
           data={[
-            { value: '#ff7070', label: 'Red' },
-            { value: '#85b4ff', label: 'Blue' },
-            { value: '#95ff85', label: 'Green' },
-            { value: '#ffff85', label: 'Yellow' },
-            { value: '#b8b8b8', label: 'Black' },
+            { value: 'red', label: 'Red' },
+            { value: 'blue', label: 'Blue' },
+            { value: 'green', label: 'Green' },
+            { value: 'yellow', label: 'Yellow' },
+            { value: 'black', label: 'Black' },
           ]}
           onChange={handleColorChange}
           value={selectedColor}
@@ -106,6 +111,7 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
             variant={trackPoints === length ? "filled" : "light"}
             onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
             size="xs"
+            style={{ backgroundColor: button, color: text }}
           >
             {length}
           </Button>
@@ -114,12 +120,13 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
           onClick={handleAddPoints} 
           disabled={trackPoints === 0}
           size="xs"
+          style={{ backgroundColor: button, color: text }}
         >
           +{trackPoints}
         </Button>
       </Group>
       
-      <ScrollArea h={150}>
+      <ScrollArea h={350}>
         <List spacing="xs" size="sm" center>
           {scoreHistory.length === 0 ? (
             <Text c="dimmed" ta="center" fz="sm">No points added yet</Text>
@@ -131,8 +138,7 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
               >
                 <span>+{entry.points} points ({entry.timestamp.toLocaleTimeString()})</span>
                 <ActionIcon 
-                  color="red" 
-                  variant="subtle" 
+                  color={button} 
                   onClick={() => handleDeleteEntry(scoreHistory.length - 1 - index)}
                   size="sm"
                 >

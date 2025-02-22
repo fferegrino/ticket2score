@@ -17,8 +17,8 @@ const getInitialState = (): PlayerData[] => {
     return JSON.parse(savedState);
   }
   return [
-    { name: 'Player 1', score: 0, color: '' },
-    { name: 'Player 2', score: 0, color: '' }
+    { name: 'Player 1', score: 0, color: 'black' },
+    { name: 'Player 2', score: 0, color: 'black' }
   ];
 };
 
@@ -34,7 +34,7 @@ function App() {
       setPlayers([...players, { 
         name: `Player ${players.length + 1}`, 
         score: 0,
-        color: ''
+        color: 'black'
       }]);
     }
   };
@@ -65,8 +65,8 @@ function App() {
 
   const resetGame = () => {
     setPlayers([
-      { name: 'Player 1', score: 0, color: '' },
-      { name: 'Player 2', score: 0, color: '' }
+      { name: 'Player 1', score: 0, color: 'black' },
+      { name: 'Player 2', score: 0, color: 'black' }
     ]);
   };
 

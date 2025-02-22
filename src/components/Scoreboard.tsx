@@ -1,4 +1,5 @@
 import { Table, Paper, Text } from '@mantine/core';
+import { colorMap } from '../colors';
 
 interface PlayerScore {
   name: string;
@@ -24,19 +25,26 @@ export function Scoreboard({ players }: ScoreboardProps) {
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {sortedPlayers.map((player, index) => (
+          {sortedPlayers.map((player, index) =>{
+              const {
+                background, button,text
+              } = colorMap[player.color] || colorMap['black']
+
+            
+            return (
             <Table.Tr key={player.name}>
-              <Table.Td style={{ backgroundColor: player.color || 'inherit' }}>{index + 1}</Table.Td>
-              <Table.Td style={{ backgroundColor: player.color || 'inherit' }}>
+              <Table.Td style={{ backgroundColor: background }}>{index + 1}</Table.Td>
+              <Table.Td style={{ backgroundColor: background }}>
                 <Text>
                   {player.name}
                 </Text>
               </Table.Td>
-              <Table.Td ta="right" style={{ backgroundColor: player.color || 'inherit' }}>
+              <Table.Td ta="right" style={{ backgroundColor: background }}>
                 {player.score}
               </Table.Td>
             </Table.Tr>
-          ))}
+            )
+          })}
         </Table.Tbody>
       </Table>
     </Paper>
