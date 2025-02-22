@@ -8,7 +8,10 @@ interface PlayerData {
   name: string;
   score: number;
   color: string;
+  cartsLeft: number;
 }
+
+const MAX_CARTS = 45;
 
 const scoreMap: Record<number, number> = {
   1: 1,
@@ -27,8 +30,8 @@ const getInitialState = (): PlayerData[] => {
     return JSON.parse(savedState);
   }
   return [
-    { name: "Player 1", score: 0, color: "black" },
-    { name: "Player 2", score: 0, color: "black" },
+    { name: "Player 1", score: 0, color: "black", cartsLeft: MAX_CARTS },
+    { name: "Player 2", score: 0, color: "black", cartsLeft: MAX_CARTS },
   ];
 };
 
@@ -47,6 +50,7 @@ function App() {
           name: `Player ${players.length + 1}`,
           score: 0,
           color: "black",
+          cartsLeft: MAX_CARTS,
         },
       ]);
     }
@@ -76,13 +80,18 @@ function App() {
       (total, entry) => total + scoreMap[entry.points],
       0,
     );
+    const usedCarts = scoreEntries.reduce(
+      (total, entry) => total + entry.points,
+      0,
+    );
+    newPlayers[index].cartsLeft = MAX_CARTS - usedCarts;
     setPlayers(newPlayers);
   };
 
   const resetGame = () => {
     setPlayers([
-      { name: "Player 1", score: 0, color: "" },
-      { name: "Player 2", score: 0, color: "" },
+      { name: "Player 1", score: 0, color: "", cartsLeft: MAX_CARTS },
+      { name: "Player 2", score: 0, color: "", cartsLeft: MAX_CARTS },
     ]);
   };
 

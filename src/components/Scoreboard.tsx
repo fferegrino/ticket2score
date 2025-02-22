@@ -4,6 +4,7 @@ import { colorMap } from "../colors";
 interface PlayerScore {
   name: string;
   score: number;
+  cartsLeft: number;
   color: string;
 }
 
@@ -22,6 +23,7 @@ export function Scoreboard({ players }: ScoreboardProps) {
             <Table.Th>Rank</Table.Th>
             <Table.Th>Player</Table.Th>
             <Table.Th ta="right">Score</Table.Th>
+            <Table.Th ta="right">Carts Left</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -39,6 +41,9 @@ export function Scoreboard({ players }: ScoreboardProps) {
                 </Table.Td>
                 <Table.Td ta="right" style={{ backgroundColor: background }}>
                   {player.score}
+                </Table.Td>
+                <Table.Td ta="right" style={{ backgroundColor: background }}>
+                  {player.cartsLeft}
                 </Table.Td>
               </Table.Tr>
             );
