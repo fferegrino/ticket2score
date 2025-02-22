@@ -55,13 +55,8 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
           label="Player Name"
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          style={{ flex: 1 }}
+          style={{ flex: 3 }}
         />
-        <Text size="xl" fw={700} mb={8}>
-          Score: {score}
-        </Text>
-      </Group>
-      <Group>
         <Select
           label="Color"
           data={[
@@ -73,17 +68,16 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
           ]}
           onChange={handleColorChange}
           value={selectedColor}
+          style={{ flex: 2 }}
         />
       </Group>
-      
-      <Text size="sm" fw={500} mt="md" mb="xs">Track Length:</Text>
       <Group mb="md">
         {[1, 2, 3, 4, 5, 6].map((length) => (
           <Button
             key={length}
             variant={trackPoints === length ? "filled" : "light"}
             onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
-            size="sm"
+            size="xs"
           >
             {length}
           </Button>
@@ -91,9 +85,9 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
         <Button 
           onClick={handleAddPoints} 
           disabled={trackPoints === 0}
-          size="sm"
+          size="xs"
         >
-          Add {trackPoints}
+          +{trackPoints}
         </Button>
       </Group>
       

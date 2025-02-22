@@ -15,9 +15,6 @@ export function Scoreboard({ players }: ScoreboardProps) {
 
   return (
     <Paper shadow="xs" p="md" withBorder mb="xl">
-      <Text size="xl" fw={700} ta="center" mb="md">
-        Scoreboard
-      </Text>
       <Table>
         <Table.Thead>
           <Table.Tr>

@@ -51,22 +51,11 @@ function App() {
 
   return (
     <Container size="xl" py="xl">
-      <Title ta="center" mb="xl">
-        Ticket to Ride Score Tracker
-      </Title>
 
       <Scoreboard players={players} />
 
-      <Group justify="center" mb="xl">
-        <Button onClick={addPlayer} disabled={players.length >= 5}>
-          Add Player
-        </Button>
-        <Button onClick={removePlayer} disabled={players.length <= 2} color="red">
-          Remove Player
-        </Button>
-      </Group>
 
-      <SimpleGrid cols={{ base: 1, sm: 2, md: players.length }} spacing="md">
+      <SimpleGrid cols={{ base: 1, sm: 2, md: players.length }} spacing="md" mb="xl">
         {players.map((player, index) => (
           <Player
             key={index}
@@ -78,6 +67,15 @@ function App() {
           />
         ))}
       </SimpleGrid>
+
+      <Group justify="center">
+        <Button onClick={addPlayer} disabled={players.length >= 5}>
+          Add Player
+        </Button>
+        <Button onClick={removePlayer} disabled={players.length <= 2} color="red">
+          Remove Player
+        </Button>
+      </Group>
     </Container>
   )
 }
