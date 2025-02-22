@@ -21,7 +21,14 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
   const [trackPoints, setTrackPoints] = useState(0);
   const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>([]);
 
-  const score = scoreHistory.reduce((total, entry) => total + entry.points, 0);
+  const scoreMap: Record<number, number> = {
+    1: 1,
+    2: 2,
+    3: 4,
+    4: 7,
+    5: 10,
+    6: 15,
+  }
 
   const handleColorChange = (value: string | null, option: ComboboxItem) => {
     setSelectedColor(value || '');
@@ -33,14 +40,14 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
       const newHistory = [...scoreHistory, { points: trackPoints, timestamp: new Date() }];
       setScoreHistory(newHistory);
       setTrackPoints(0);
-      onScoreChange(newHistory.reduce((total, entry) => total + entry.points, 0));
+      onScoreChange(newHistory.reduce((total, entry) => total + scoreMap[entry.points], 0));
     }
   };
 
   const handleDeleteEntry = (index: number) => {
     const newHistory = scoreHistory.filter((_, i) => i !== index);
     setScoreHistory(newHistory);
-    onScoreChange(newHistory.reduce((total, entry) => total + entry.points, 0));
+    onScoreChange(newHistory.reduce((total, entry) => total + scoreMap[entry.points], 0));
   };
 
   const handleNameChange = (value: string) => {
