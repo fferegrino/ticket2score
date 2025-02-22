@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { TextInput, Button, Paper, Group, NumberInput, Text, List, ScrollArea } from '@mantine/core';
+import { TextInput, Button, Paper, Group, NumberInput, Text, List, ScrollArea, Select, ComboboxItem } from '@mantine/core';
 
 interface PlayerProps {
   initialName: string;
+  initialColor: string;
   onNameChange: (name: string) => void;
+  onColorChange: (color: string) => void;
 }
 
 interface ScoreEntry {
@@ -11,11 +13,17 @@ interface ScoreEntry {
   timestamp: Date;
 }
 
-export function Player({ initialName, onNameChange }: PlayerProps) {
+export function Player({ initialName, initialColor, onNameChange, onColorChange }: PlayerProps) {
+  const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   const [name, setName] = useState(initialName);
   const [score, setScore] = useState(0);
   const [trackPoints, setTrackPoints] = useState(0);
   const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>([]);
+
+  const handleColorChange = (value: string | null, option: ComboboxItem) => {
+    setSelectedColor(value || '');
+    onColorChange(value || '');
+  };
 
   const handleAddPoints = () => {
     setScore(prev => prev + trackPoints);
@@ -29,7 +37,7 @@ export function Player({ initialName, onNameChange }: PlayerProps) {
   };
 
   return (
-    <Paper shadow="xs" p="md" withBorder>
+    <Paper shadow="xs" p="md" withBorder style={{ backgroundColor: selectedColor || 'white' }}>
       <Group align="flex-end" mb="md">
         <TextInput
           label="Player Name"
@@ -40,6 +48,19 @@ export function Player({ initialName, onNameChange }: PlayerProps) {
         <Text size="xl" fw={700} mb={8}>
           Score: {score}
         </Text>
+      </Group>
+      <Group>
+        <Select
+          label="Color"
+          data={[
+            { value: '#ff7070', label: 'Red' },
+            { value: '#85b4ff', label: 'Blue' },
+            { value: '#95ff85', label: 'Green' },
+            { value: '#ffff85', label: 'Yellow' },
+            { value: '#b8b8b8', label: 'Black' },
+          ]}
+          onChange={handleColorChange}
+        />
       </Group>
       <Group>
         <NumberInput
