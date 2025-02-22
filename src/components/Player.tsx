@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { TextInput, Button, Paper, Group, Text, List, ScrollArea, Select, ComboboxItem } from '@mantine/core';
+import { TextInput, Button, Paper, Group, Text, List, ScrollArea, Select, ComboboxItem, ActionIcon } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
 
 interface PlayerProps {
   initialName: string;
@@ -16,9 +17,10 @@ interface ScoreEntry {
 export function Player({ initialName, initialColor, onNameChange, onColorChange }: PlayerProps) {
   const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   const [name, setName] = useState(initialName);
-  const [score, setScore] = useState(0);
   const [trackPoints, setTrackPoints] = useState(0);
   const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>([]);
+
+  const score = scoreHistory.reduce((total, entry) => total + entry.points, 0);
 
   const handleColorChange = (value: string | null, option: ComboboxItem) => {
     setSelectedColor(value || '');
@@ -27,10 +29,13 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange 
 
   const handleAddPoints = () => {
     if (trackPoints > 0) {
-      setScore(prev => prev + trackPoints);
       setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
       setTrackPoints(0);
     }
+  };
+
+  const handleDeleteEntry = (index: number) => {
+    setScoreHistory(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleNameChange = (value: string) => {
@@ -92,8 +97,19 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange 
             <Text c="dimmed" ta="center" fz="sm">No points added yet</Text>
           ) : (
             scoreHistory.map((entry, index) => (
-              <List.Item key={index}>
-                +{entry.points} points ({entry.timestamp.toLocaleTimeString()})
+              <List.Item
+                key={index}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              >
+                <span>+{entry.points} points ({entry.timestamp.toLocaleTimeString()})</span>
+                <ActionIcon 
+                  color="red" 
+                  variant="subtle" 
+                  onClick={() => handleDeleteEntry(scoreHistory.length - 1 - index)}
+                  size="sm"
+                >
+                  <IconTrash size="1rem" />
+                </ActionIcon>
               </List.Item>
             )).reverse()
           )}
