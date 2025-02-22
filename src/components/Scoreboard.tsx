@@ -1,4 +1,5 @@
 import { Table, Paper, Text } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { colorMap } from "../colors";
 
 interface PlayerScore {
@@ -14,11 +15,19 @@ interface ScoreboardProps {
 
 export function Scoreboard({ players }: ScoreboardProps) {
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
-
+  const isMobile = useMediaQuery("(max-width: 1000px)");
+  const textSize = isMobile ? "xs" : "md";
   return (
-    <Paper shadow="xs" p="md" withBorder mb="xl">
+    <Paper
+      shadow="xs"
+      p={isMobile ? "xs" : "md"}
+      withBorder
+      mb={isMobile ? "md" : "xl"}
+    >
       <Table>
-        <Table.Thead>
+        <Table.Thead
+          style={{ display: isMobile ? "none" : "table-header-group" }}
+        >
           <Table.Tr>
             <Table.Th>Rank</Table.Th>
             <Table.Th>Player</Table.Th>
@@ -37,17 +46,26 @@ export function Scoreboard({ players }: ScoreboardProps) {
                   {index + 1}
                 </Table.Td>
                 <Table.Td style={{ backgroundColor: background }}>
-                  <Text size="md" style={{ color: darker, fontWeight: "bold" }}>
+                  <Text
+                    size={textSize}
+                    style={{ color: darker, fontWeight: "bold" }}
+                  >
                     {player.name}
                   </Text>
                 </Table.Td>
                 <Table.Td ta="right" style={{ backgroundColor: background }}>
-                  <Text size="xl" style={{ color: darker, fontWeight: "bold" }}>
+                  <Text
+                    size={textSize}
+                    style={{ color: darker, fontWeight: "bold" }}
+                  >
                     {player.score}
                   </Text>
                 </Table.Td>
                 <Table.Td ta="right" style={{ backgroundColor: background }}>
-                  <Text size="md" style={{ color: darker, fontWeight: "bold" }}>
+                  <Text
+                    size={textSize}
+                    style={{ color: darker, fontWeight: "bold" }}
+                  >
                     {player.cartsLeft}
                   </Text>
                 </Table.Td>

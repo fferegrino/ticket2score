@@ -140,7 +140,7 @@ function App() {
         <Scoreboard players={players} />
 
         <SimpleGrid
-          cols={{ base: 1, sm: 2, md: players.length }}
+          cols={{ base: 1, sm: players.length, md: players.length }}
           spacing="md"
           mb="xl"
         >
