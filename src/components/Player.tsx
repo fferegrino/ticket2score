@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, Button, Paper, Group, NumberInput, Text, List, ScrollArea, Select, ComboboxItem } from '@mantine/core';
+import { TextInput, Button, Paper, Group, Text, List, ScrollArea, Select, ComboboxItem } from '@mantine/core';
 
 interface PlayerProps {
   initialName: string;
@@ -26,9 +26,11 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange 
   };
 
   const handleAddPoints = () => {
-    setScore(prev => prev + trackPoints);
-    setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
-    setTrackPoints(0);
+    if (trackPoints > 0) {
+      setScore(prev => prev + trackPoints);
+      setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
+      setTrackPoints(0);
+    }
   };
 
   const handleNameChange = (value: string) => {
@@ -62,20 +64,29 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange 
           onChange={handleColorChange}
         />
       </Group>
-      <Group>
-        <NumberInput
-          label="Track Points"
-          value={trackPoints}
-          onChange={(value) => setTrackPoints(Number(value))}
-          min={0}
-          style={{ flex: 1 }}
-        />
-        <Button onClick={handleAddPoints} disabled={trackPoints === 0}>
-          Add Points
+      
+      <Text size="sm" fw={500} mt="md" mb="xs">Track Length:</Text>
+      <Group mb="md">
+        {[1, 2, 3, 4, 5, 6].map((length) => (
+          <Button
+            key={length}
+            variant={trackPoints === length ? "filled" : "light"}
+            onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
+            size="sm"
+          >
+            {length}
+          </Button>
+        ))}
+        <Button 
+          onClick={handleAddPoints} 
+          disabled={trackPoints === 0}
+          size="sm"
+        >
+          Add {trackPoints}
         </Button>
       </Group>
       
-      <ScrollArea h={150} mt="md">
+      <ScrollArea h={150}>
         <List spacing="xs" size="sm" center>
           {scoreHistory.length === 0 ? (
             <Text c="dimmed" ta="center" fz="sm">No points added yet</Text>
