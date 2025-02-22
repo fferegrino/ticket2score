@@ -163,10 +163,11 @@ export function Player({
       />
       <Button.Group
         mb={isMobile ? "xs" : "xs"}
-        style={{ display: isSmallerMobile ? "none" : "block" }}
+        style={{ display: isSmallerMobile || isMobile ? "none" : "block" }}
       >
         {BUTTONS.map((length) => (
           <Button
+
             key={length}
             variant={trackPoints === length ? "filled" : "light"}
             onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
@@ -185,7 +186,9 @@ export function Player({
       <Group
         mb={isMobile ? "xs" : "xs"}
         gap="2"
-        style={{ display: isSmallerMobile ? "flex" : "none" }}
+        align="center"
+        justify="center"
+        style={{ display: isSmallerMobile || isMobile ? "flex" : "none" }}
       >
         {chunkedButtons.map((chunk, index) => (
           <Button.Group key={index}>
@@ -252,9 +255,6 @@ export function Player({
                     >
                       {entry.points} carts
                     </Text>
-                    {/* <Text style={{ color: button }}>
-                      ({entry.timestamp.toLocaleTimeString()})
-                    </Text> */}
                     <ActionIcon
                       hidden={isMobile}
                       style={{ display: isMobile ? "none" : "block" }}
