@@ -100,15 +100,15 @@ export function Player({
         <TextInput
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          styles={{ 
-            root:{flex: 3},
+          styles={{
+            root: { flex: 3 },
             input: {
               background: background,
               color: button,
-              border: 'none',
-              fontWeight: 'bold',
-              fontSize: '1.5rem',
-              padding: '0rem',
+              border: "none",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              padding: "0rem",
             },
           }}
         />
@@ -164,19 +164,23 @@ export function Player({
                     alignItems: "center",
                   }}
                 >
-                  <span>
-                    +{entry.points} carts (
-                    {entry.timestamp.toLocaleTimeString()})
-                  </span>
-                  <ActionIcon
-                    color={button}
-                    onClick={() =>
-                      handleDeleteEntry(scoreHistory.length - 1 - index)
-                    }
-                    size="sm"
-                  >
-                    <IconTrash size="1rem" />
-                  </ActionIcon>
+                  <Group>
+                    <Text size="xl" style={{ color: button }}>
+                      {entry.points} carts
+                    </Text>
+                    {/* <Text style={{ color: button }}>
+                      ({entry.timestamp.toLocaleTimeString()})
+                    </Text> */}
+                    <ActionIcon
+                      color={button}
+                      onClick={() =>
+                        handleDeleteEntry(scoreHistory.length - 1 - index)
+                      }
+                      size="sm"
+                    >
+                      <IconTrash size="1rem" />
+                    </ActionIcon>
+                  </Group>
                 </List.Item>
               ))
               .reverse()
