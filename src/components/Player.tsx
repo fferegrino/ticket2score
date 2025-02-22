@@ -64,7 +64,7 @@ export function Player({
   );
 
   const isMobile = useMediaQuery("(max-width: 1000px)");
-  const isSmallerMobile = useMediaQuery("(max-width: 500px)");
+  const isSmallerMobile = useMediaQuery("(max-width: 620px)");
 
   useEffect(() => {
     localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
@@ -167,7 +167,6 @@ export function Player({
       >
         {BUTTONS.map((length) => (
           <Button
-
             key={length}
             variant={trackPoints === length ? "filled" : "light"}
             onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
@@ -241,31 +240,36 @@ export function Player({
                   key={index}
                   style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <Group>
-                    <Text
-                      size={isMobile ? "sm" : "xl"}
-                      style={{ color: darker, fontWeight: "bold" }}
-                      onClick={() =>
-                        handleDeleteEntry(scoreHistory.length - 1 - index)
-                      }
-                    >
-                      {entry.points} carts
-                    </Text>
+                  <Group gap={isMobile ? "2" : "md"}>
                     <ActionIcon
-                      hidden={isMobile}
-                      style={{ display: isMobile ? "none" : "block" }}
+                      variant={isMobile ? "subtle" : "filled"}
+                      // style={{ display: isMobile ? "none" : "block" }}
                       color={button}
                       onClick={() =>
                         handleDeleteEntry(scoreHistory.length - 1 - index)
                       }
                       size="xs"
                     >
-                      <IconTrash size="1rem" />
+                      <IconTrash size={isMobile ? "1rem" : "1.5rem"} />
                     </ActionIcon>
+                    <Text
+                      size={isMobile ? "md" : "xl"}
+                      style={{
+                        color: darker,
+                        fontWeight: "bold",
+                        padding: 0,
+                        margin: 0,
+                      }}
+                      onClick={() =>
+                        handleDeleteEntry(scoreHistory.length - 1 - index)
+                      }
+                    >
+                      {entry.points} carts
+                    </Text>
                   </Group>
                 </List.Item>
               ))
@@ -287,7 +291,7 @@ export function Player({
             flex: 1,
             textAlign: "center",
             color: darker,
-            display: isMobile ? "none" : "block",
+            display: isSmallerMobile ? "none" : "block",
           }}
         >
           {COLORS.find((color) => color.value === selectedColor)?.label}
