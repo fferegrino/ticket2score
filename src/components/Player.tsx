@@ -54,6 +54,7 @@ export function Player({
   );
 
   const isMobile = useMediaQuery("(max-width: 1000px)");
+  const isSmallerMobile = useMediaQuery("(max-width: 500px)");
 
   useEffect(() => {
     localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
@@ -105,7 +106,7 @@ export function Player({
     colorMap[selectedColor] || colorMap["black"];
 
   const chunkedButtons = BUTTONS.reduce((acc, button, index) => {
-    const chunkIndex = Math.floor(index / 3);
+    const chunkIndex = Math.floor(index / (isSmallerMobile ? 2 : 3));
     if (!acc[chunkIndex]) {
       acc[chunkIndex] = [];
     }
@@ -139,7 +140,7 @@ export function Player({
       />
       <Button.Group
         mb={isMobile ? "xs" : "xs"}
-        style={{ display: isMobile ? "none" : "block" }}
+        style={{ display: isSmallerMobile ? "none" : "block" }}
       >
         {BUTTONS.map((length) => (
           <Button
@@ -161,7 +162,7 @@ export function Player({
       <Group
         mb={isMobile ? "xs" : "xs"}
         gap="2"
-        style={{ display: isMobile ? "flex" : "none" }}
+        style={{ display: isSmallerMobile ? "flex" : "none" }}
       >
         {chunkedButtons.map((chunk, index) => (
           <Button.Group key={index}>
@@ -205,7 +206,7 @@ export function Player({
         <List spacing="xs" size="sm" center>
           {scoreHistory.length === 0 ? (
             <Text ta="center" fz="sm" style={{ color: button }}>
-              No tracks added yet
+              No tracks
             </Text>
           ) : (
             scoreHistory
