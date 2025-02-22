@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
-import { Container, Title, SimpleGrid, Button, Group } from '@mantine/core'
-import { Player } from './components/Player'
-import { Scoreboard } from './components/Scoreboard'
+import { useState, useEffect } from "react";
+import { Container, Title, SimpleGrid, Button, Group } from "@mantine/core";
+import { Player } from "./components/Player";
+import { Scoreboard } from "./components/Scoreboard";
+import { ScoreEntry } from "./ScoreEntry";
 
 interface PlayerData {
   name: string;
@@ -9,7 +10,16 @@ interface PlayerData {
   color: string;
 }
 
-const STORAGE_KEY = 'ticketToRideState';
+const scoreMap: Record<number, number> = {
+  1: 1,
+  2: 2,
+  3: 4,
+  4: 7,
+  5: 10,
+  6: 15,
+};
+
+const STORAGE_KEY = "ticketToRideState";
 
 const getInitialState = (): PlayerData[] => {
   const savedState = localStorage.getItem(STORAGE_KEY);
@@ -17,8 +27,8 @@ const getInitialState = (): PlayerData[] => {
     return JSON.parse(savedState);
   }
   return [
-    { name: 'Player 1', score: 0, color: 'black' },
-    { name: 'Player 2', score: 0, color: 'black' }
+    { name: "Player 1", score: 0, color: "black" },
+    { name: "Player 2", score: 0, color: "black" },
   ];
 };
 
@@ -31,11 +41,14 @@ function App() {
 
   const addPlayer = () => {
     if (players.length < 5) {
-      setPlayers([...players, { 
-        name: `Player ${players.length + 1}`, 
-        score: 0,
-        color: 'black'
-      }]);
+      setPlayers([
+        ...players,
+        {
+          name: `Player ${players.length + 1}`,
+          score: 0,
+          color: "black",
+        },
+      ]);
     }
   };
 
@@ -57,16 +70,19 @@ function App() {
     setPlayers(newPlayers);
   };
 
-  const handleScoreChange = (index: number, score: number) => {
+  const handleScoreChange = (index: number, scoreEntries: ScoreEntry[]) => {
     const newPlayers = [...players];
-    newPlayers[index].score = score;
+    newPlayers[index].score = scoreEntries.reduce(
+      (total, entry) => total + scoreMap[entry.points],
+      0,
+    );
     setPlayers(newPlayers);
   };
 
   const resetGame = () => {
     setPlayers([
-      { name: 'Player 1', score: 0, color: '' },
-      { name: 'Player 2', score: 0, color: '' }
+      { name: "Player 1", score: 0, color: "" },
+      { name: "Player 2", score: 0, color: "" },
     ]);
   };
 
@@ -85,7 +101,11 @@ function App() {
     <Container size="xl" py="xl">
       <Scoreboard players={players} />
 
-      <SimpleGrid cols={{ base: 1, sm: 2, md: players.length }} spacing="md" mb="xl">
+      <SimpleGrid
+        cols={{ base: 1, sm: 2, md: players.length }}
+        spacing="md"
+        mb="xl"
+      >
         {players.map((player, index) => (
           <Player
             key={index}
@@ -103,7 +123,11 @@ function App() {
           <Button onClick={addPlayer} disabled={players.length >= 5}>
             Add Player
           </Button>
-          <Button onClick={removePlayer} disabled={players.length <= 2} color="red">
+          <Button
+            onClick={removePlayer}
+            disabled={players.length <= 2}
+            color="red"
+          >
             Remove Player
           </Button>
         </Group>
@@ -117,7 +141,7 @@ function App() {
         </Group>
       </Group>
     </Container>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,19 +1,26 @@
-import { useState, useEffect } from 'react';
-import { TextInput, Button, Paper, Group, Text, List, ScrollArea, Select, ComboboxItem, ActionIcon } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
-import { colorMap } from '../colors';
+import { useState, useEffect } from "react";
+import {
+  TextInput,
+  Button,
+  Paper,
+  Group,
+  Text,
+  List,
+  ScrollArea,
+  Select,
+  ComboboxItem,
+  ActionIcon,
+} from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
+import { colorMap } from "../colors";
+import { ScoreEntry } from "../ScoreEntry";
 
 interface PlayerProps {
   initialName: string;
   initialColor: string;
   onNameChange: (name: string) => void;
   onColorChange: (color: string) => void;
-  onScoreChange: (score: number) => void;
-}
-
-interface ScoreEntry {
-  points: number;
-  timestamp: Date;
+  onScoreChange: (scoreEntries: ScoreEntry[]) => void;
 }
 
 const getStoredHistory = (playerName: string): ScoreEntry[] => {
@@ -22,53 +29,55 @@ const getStoredHistory = (playerName: string): ScoreEntry[] => {
     const parsed = JSON.parse(stored);
     return parsed.map((entry: any) => ({
       ...entry,
-      timestamp: new Date(entry.timestamp)
+      timestamp: new Date(entry.timestamp),
     }));
   }
   return [];
 };
 
-export function Player({ initialName, initialColor, onNameChange, onColorChange, onScoreChange }: PlayerProps) {
+export function Player({
+  initialName,
+  initialColor,
+  onNameChange,
+  onColorChange,
+  onScoreChange,
+}: PlayerProps) {
   const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   const [name, setName] = useState(initialName);
   const [trackPoints, setTrackPoints] = useState(0);
-  const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>(() => getStoredHistory(initialName));
-
-  const scoreMap: Record<number, number> = {
-    1: 1,
-    2: 2,
-    3: 4,
-    4: 7,
-    5: 10,
-    6: 15,
-  }
+  const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>(() =>
+    getStoredHistory(initialName),
+  );
 
   useEffect(() => {
     localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
-    onScoreChange(scoreHistory.reduce((total, entry) => total + scoreMap[entry.points], 0));
+    onScoreChange(scoreHistory);
   }, [scoreHistory, name]);
 
   const handleColorChange = (value: string | null, option: ComboboxItem) => {
-    setSelectedColor(value || '');
-    onColorChange(value || '');
+    setSelectedColor(value || "");
+    onColorChange(value || "");
   };
 
   const handleAddPoints = () => {
     if (trackPoints > 0) {
-      setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
+      setScoreHistory((prev) => [
+        ...prev,
+        { points: trackPoints, timestamp: new Date() },
+      ]);
       setTrackPoints(0);
     }
   };
 
   const handleDeleteEntry = (index: number) => {
-    setScoreHistory(prev => prev.filter((_, i) => i !== index));
+    setScoreHistory((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleNameChange = (value: string) => {
     const oldName = name;
     setName(value);
     onNameChange(value);
-    
+
     // Move score history to new name key
     const history = localStorage.getItem(`scoreHistory_${oldName}`);
     if (history) {
@@ -76,26 +85,30 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
       localStorage.removeItem(`scoreHistory_${oldName}`);
     }
   };
-  
-  const {
-    background, button,text
-  } = colorMap[selectedColor] || colorMap['black']
+
+  const { background, button, text } =
+    colorMap[selectedColor] || colorMap["black"];
 
   return (
-    <Paper shadow="xs" p="md" withBorder style={{ backgroundColor: background }}>
+    <Paper
+      shadow="xs"
+      p="md"
+      withBorder
+      style={{ backgroundColor: background }}
+    >
       <Group align="flex-end" mb="md">
         <TextInput
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          style={{ flex: 3, backgroundColor: background, }}
+          style={{ flex: 3, backgroundColor: background }}
         />
         <Select
           data={[
-            { value: 'red', label: 'Red' },
-            { value: 'blue', label: 'Blue' },
-            { value: 'green', label: 'Green' },
-            { value: 'yellow', label: 'Yellow' },
-            { value: 'black', label: 'Black' },
+            { value: "red", label: "Red" },
+            { value: "blue", label: "Blue" },
+            { value: "green", label: "Green" },
+            { value: "yellow", label: "Yellow" },
+            { value: "black", label: "Black" },
           ]}
           onChange={handleColorChange}
           value={selectedColor}
@@ -114,8 +127,8 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
             {length}
           </Button>
         ))}
-        <Button 
-          onClick={handleAddPoints} 
+        <Button
+          onClick={handleAddPoints}
           disabled={trackPoints === 0}
           size="xs"
           style={{ backgroundColor: button, color: text }}
@@ -123,30 +136,43 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
           +{trackPoints}
         </Button>
       </Group>
-      
+
       <ScrollArea h={350}>
         <List spacing="xs" size="sm" center>
           {scoreHistory.length === 0 ? (
-            <Text c="dimmed" ta="center" fz="sm">No carts added yet</Text>
+            <Text c="dimmed" ta="center" fz="sm">
+              No carts added yet
+            </Text>
           ) : (
-            scoreHistory.map((entry, index) => (
-              <List.Item
-                key={index}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <span>+{entry.points} carts ({entry.timestamp.toLocaleTimeString()})</span>
-                <ActionIcon 
-                  color={button} 
-                  onClick={() => handleDeleteEntry(scoreHistory.length - 1 - index)}
-                  size="sm"
+            scoreHistory
+              .map((entry, index) => (
+                <List.Item
+                  key={index}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
                 >
-                  <IconTrash size="1rem" />
-                </ActionIcon>
-              </List.Item>
-            )).reverse()
+                  <span>
+                    +{entry.points} carts (
+                    {entry.timestamp.toLocaleTimeString()})
+                  </span>
+                  <ActionIcon
+                    color={button}
+                    onClick={() =>
+                      handleDeleteEntry(scoreHistory.length - 1 - index)
+                    }
+                    size="sm"
+                  >
+                    <IconTrash size="1rem" />
+                  </ActionIcon>
+                </List.Item>
+              ))
+              .reverse()
           )}
         </List>
       </ScrollArea>
     </Paper>
   );
-} 
+}
