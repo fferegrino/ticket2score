@@ -28,7 +28,7 @@ export function Scoreboard({ players }: ScoreboardProps) {
         </Table.Thead>
         <Table.Tbody>
           {sortedPlayers.map((player, index) => {
-            const { background, button, text } =
+            const { background, button, text, darker } =
               colorMap[player.color] || colorMap["black"];
 
             return (
@@ -37,13 +37,19 @@ export function Scoreboard({ players }: ScoreboardProps) {
                   {index + 1}
                 </Table.Td>
                 <Table.Td style={{ backgroundColor: background }}>
-                  <Text>{player.name}</Text>
+                  <Text size="md" style={{ color: darker, fontWeight: "bold" }}>
+                    {player.name}
+                  </Text>
                 </Table.Td>
                 <Table.Td ta="right" style={{ backgroundColor: background }}>
-                  {player.score}
+                  <Text size="xl" style={{ color: darker, fontWeight: "bold" }}>
+                    {player.score}
+                  </Text>
                 </Table.Td>
                 <Table.Td ta="right" style={{ backgroundColor: background }}>
-                  {player.cartsLeft}
+                  <Text size="md" style={{ color: darker, fontWeight: "bold" }}>
+                    {player.cartsLeft}
+                  </Text>
                 </Table.Td>
               </Table.Tr>
             );

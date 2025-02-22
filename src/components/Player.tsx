@@ -86,7 +86,7 @@ export function Player({
     }
   };
 
-  const { background, button, text } =
+  const { background, button, text, darker } =
     colorMap[selectedColor] || colorMap["black"];
 
   return (
@@ -104,7 +104,7 @@ export function Player({
             root: { flex: 3 },
             input: {
               background: background,
-              color: button,
+              color: darker,
               border: "none",
               fontWeight: "bold",
               fontSize: "1.5rem",
@@ -137,15 +137,21 @@ export function Player({
             {length}
           </Button>
         ))}
-        <Button
-          onClick={handleAddPoints}
-          disabled={trackPoints === 0}
-          size="xs"
-          style={{ backgroundColor: button, color: text }}
-        >
-          +{trackPoints}
-        </Button>
       </Group>
+      <Button
+        fullWidth
+        onClick={handleAddPoints}
+        disabled={trackPoints === 0}
+        size="xs"
+        mb="md"
+        style={{
+          backgroundColor: button,
+          color: text,
+          display: trackPoints === 0 ? "none" : "block",
+        }}
+      >
+        +{trackPoints}
+      </Button>
 
       <ScrollArea h={350}>
         <List spacing="xs" size="sm" center>
@@ -165,7 +171,10 @@ export function Player({
                   }}
                 >
                   <Group>
-                    <Text size="xl" style={{ color: button }}>
+                    <Text
+                      size="xl"
+                      style={{ color: darker, fontWeight: "bold" }}
+                    >
                       {entry.points} carts
                     </Text>
                     {/* <Text style={{ color: button }}>
