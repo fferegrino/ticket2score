@@ -52,7 +52,6 @@ export function Player({
   );
 
   const isMobile = useMediaQuery("(max-width: 1000px)");
-  
 
   useEffect(() => {
     localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
@@ -105,9 +104,10 @@ export function Player({
 
   return (
     <Paper
-      shadow="xs"
+      shadow={isMobile ? "none" : "xs"}
       p={isMobile ? "xs" : "md"}
-      withBorder
+      radius={isMobile ? "none" : "md"}
+      withBorder={isMobile ? false : true}
       style={{ backgroundColor: background }}
     >
       <Group align="flex-end" mb="md">
@@ -121,7 +121,7 @@ export function Player({
               color: darker,
               border: "none",
               fontWeight: "bold",
-              fontSize: isMobile ? "1rem" : "1.5rem",
+              fontSize: isMobile ? "0.7rem" : "1.5rem",
               padding: "0rem",
             },
           }}
@@ -137,7 +137,7 @@ export function Player({
           ]}
           onChange={handleColorChange}
           value={selectedColor}
-          style={{ flex: 2 }}
+          style={{ flex: isMobile ? 3 : 2 }}
         />
       </Group>
       <Group mb={isMobile ? "xs" : "xs"} gap={isMobile ? "5" : "8"}>
@@ -147,7 +147,12 @@ export function Player({
             variant={trackPoints === length ? "filled" : "light"}
             onClick={() => setTrackPoints(trackPoints === length ? 0 : length)}
             size="xs"
-            style={{ backgroundColor: button, color: text, fontSize: isMobile ? "0.75rem" : "1rem", padding: isMobile ? "0.5rem" : "0.5rem" }}
+            style={{
+              backgroundColor: button,
+              color: text,
+              fontSize: isMobile ? "0.75rem" : "1rem",
+              padding: isMobile ? "0.5rem" : "0.5rem",
+            }}
           >
             {length}
           </Button>
@@ -187,7 +192,7 @@ export function Player({
                 >
                   <Group>
                     <Text
-                      size={isMobile ? "md" : "xl"}
+                      size={isMobile ? "xs" : "xl"}
                       style={{ color: darker, fontWeight: "bold" }}
                     >
                       {entry.points} carts
@@ -200,7 +205,7 @@ export function Player({
                       onClick={() =>
                         handleDeleteEntry(scoreHistory.length - 1 - index)
                       }
-                      size="sm"
+                      size="xs"
                     >
                       <IconTrash size="1rem" />
                     </ActionIcon>

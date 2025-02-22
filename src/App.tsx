@@ -138,11 +138,15 @@ function App() {
 
   return (
     <ModalsProvider>
-      <Container size="xl" py="xl">
+      <Container size="xl" py={isMobile ? "xs" : "xl"}>
         <Scoreboard players={players} />
 
         <SimpleGrid
-          cols={{ base: players.length, sm: players.length, md: players.length }}
+          cols={{
+            base: players.length,
+            sm: players.length,
+            md: players.length,
+          }}
           spacing={isMobile ? "0" : "md"}
           mb="xl"
         >

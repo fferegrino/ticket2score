@@ -21,7 +21,7 @@ export function Scoreboard({ players }: ScoreboardProps) {
     <Paper
       shadow="xs"
       p={isMobile ? "0" : "md"}
-      withBorder
+      withBorder={isMobile ? false : true}
       mb={isMobile ? "0" : "xl"}
     >
       <Table>
