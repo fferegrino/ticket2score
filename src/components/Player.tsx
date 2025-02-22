@@ -100,7 +100,17 @@ export function Player({
         <TextInput
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          style={{ flex: 3, backgroundColor: background }}
+          styles={{ 
+            root:{flex: 3},
+            input: {
+              background: background,
+              color: button,
+              border: 'none',
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              padding: '0rem',
+            },
+          }}
         />
         <Select
           data={[
@@ -140,8 +150,8 @@ export function Player({
       <ScrollArea h={350}>
         <List spacing="xs" size="sm" center>
           {scoreHistory.length === 0 ? (
-            <Text c="dimmed" ta="center" fz="sm">
-              No carts added yet
+            <Text ta="center" fz="sm" style={{ color: button }}>
+              No tracks added yet
             </Text>
           ) : (
             scoreHistory
