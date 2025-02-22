@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Container, Title, SimpleGrid, Button, Group } from "@mantine/core";
+import { ModalsProvider, modals } from "@mantine/modals";
 import { Player } from "./components/Player";
 import { Scoreboard } from "./components/Scoreboard";
 import { ScoreEntry } from "./ScoreEntry";
@@ -57,9 +58,18 @@ function App() {
   };
 
   const removePlayer = () => {
-    if (players.length > 2) {
-      setPlayers(players.slice(0, -1));
-    }
+    modals.openConfirmModal({
+      title: "Remove Player",
+      children:
+        "Are you sure you want to remove the last player? This action cannot be undone.",
+      labels: { confirm: "Remove", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: () => {
+        if (players.length > 2) {
+          setPlayers(players.slice(0, -1));
+        }
+      },
+    });
   };
 
   const handleNameChange = (index: number, name: string) => {
@@ -89,67 +99,87 @@ function App() {
   };
 
   const resetGame = () => {
-    setPlayers([
-      { name: "Player 1", score: 0, color: "", cartsLeft: MAX_CARTS },
-      { name: "Player 2", score: 0, color: "", cartsLeft: MAX_CARTS },
-    ]);
+    modals.openConfirmModal({
+      title: "Start New Game",
+      children:
+        "Are you sure you want to start a new game? All current scores will be reset, but player history will be kept.",
+      labels: { confirm: "Start New Game", cancel: "Cancel" },
+      confirmProps: { color: "orange" },
+      onConfirm: () => {
+        setPlayers([
+          { name: "Player 1", score: 0, color: "", cartsLeft: MAX_CARTS },
+          { name: "Player 2", score: 0, color: "", cartsLeft: MAX_CARTS },
+        ]);
+      },
+    });
   };
 
   const clearAllData = () => {
-    // Clear all player histories
-    for (const player of players) {
-      localStorage.removeItem(`scoreHistory_${player.name}`);
-    }
-    // Clear game state
-    localStorage.removeItem(STORAGE_KEY);
-    // Reset to initial state
-    resetGame();
+    modals.openConfirmModal({
+      title: "Clear All Data",
+      children:
+        "Are you sure you want to clear all data? This will remove all players and their score history. This action cannot be undone.",
+      labels: { confirm: "Clear All Data", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: () => {
+        // Clear all player histories
+        for (const player of players) {
+          localStorage.removeItem(`scoreHistory_${player.name}`);
+        }
+        // Clear game state
+        localStorage.removeItem(STORAGE_KEY);
+        // Reset to initial state
+        resetGame();
+      },
+    });
   };
 
   return (
-    <Container size="xl" py="xl">
-      <Scoreboard players={players} />
+    <ModalsProvider>
+      <Container size="xl" py="xl">
+        <Scoreboard players={players} />
 
-      <SimpleGrid
-        cols={{ base: 1, sm: 2, md: players.length }}
-        spacing="md"
-        mb="xl"
-      >
-        {players.map((player, index) => (
-          <Player
-            key={index}
-            initialName={player.name}
-            initialColor={player.color}
-            onNameChange={(name) => handleNameChange(index, name)}
-            onColorChange={(color) => handleColorChange(index, color)}
-            onScoreChange={(score) => handleScoreChange(index, score)}
-          />
-        ))}
-      </SimpleGrid>
+        <SimpleGrid
+          cols={{ base: 1, sm: 2, md: players.length }}
+          spacing="md"
+          mb="xl"
+        >
+          {players.map((player, index) => (
+            <Player
+              key={index}
+              initialName={player.name}
+              initialColor={player.color}
+              onNameChange={(name) => handleNameChange(index, name)}
+              onColorChange={(color) => handleColorChange(index, color)}
+              onScoreChange={(score) => handleScoreChange(index, score)}
+            />
+          ))}
+        </SimpleGrid>
 
-      <Group justify="center" gap="md">
-        <Group>
-          <Button onClick={addPlayer} disabled={players.length >= 5}>
-            Add Player
-          </Button>
-          <Button
-            onClick={removePlayer}
-            disabled={players.length <= 2}
-            color="red"
-          >
-            Remove Player
-          </Button>
+        <Group justify="center" gap="md">
+          <Group>
+            <Button onClick={addPlayer} disabled={players.length >= 5}>
+              Add Player
+            </Button>
+            <Button
+              onClick={removePlayer}
+              disabled={players.length <= 2}
+              color="red"
+            >
+              Remove Player
+            </Button>
+          </Group>
+          <Group>
+            <Button onClick={resetGame} color="orange">
+              New Game
+            </Button>
+            <Button onClick={clearAllData} color="red" variant="outline">
+              Clear All Data
+            </Button>
+          </Group>
         </Group>
-        <Group>
-          <Button onClick={resetGame} color="orange">
-            New Game
-          </Button>
-          <Button onClick={clearAllData} color="red" variant="outline">
-            Clear All Data
-          </Button>
-        </Group>
-      </Group>
-    </Container>
+      </Container>
+    </ModalsProvider>
   );
 }
 

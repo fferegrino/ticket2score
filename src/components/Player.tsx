@@ -11,6 +11,7 @@ import {
   ComboboxItem,
   ActionIcon,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
 import { colorMap } from "../colors";
 import { ScoreEntry } from "../ScoreEntry";
@@ -70,7 +71,16 @@ export function Player({
   };
 
   const handleDeleteEntry = (index: number) => {
-    setScoreHistory((prev) => prev.filter((_, i) => i !== index));
+    modals.openConfirmModal({
+      title: "Delete Track",
+      children:
+        "Are you sure you want to delete this track? This action cannot be undone.",
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: () => {
+        setScoreHistory((prev) => prev.filter((_, i) => i !== index));
+      },
+    });
   };
 
   const handleNameChange = (value: string) => {
