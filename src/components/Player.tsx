@@ -7,13 +7,15 @@ import {
   Text,
   List,
   ScrollArea,
-  Select,
-  ComboboxItem,
   ActionIcon,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconTrash } from "@tabler/icons-react";
+import {
+  IconTrash,
+  IconChevronLeft,
+  IconChevronRight,
+} from "@tabler/icons-react";
 import { colorMap } from "../colors";
 import { ScoreEntry } from "../ScoreEntry";
 
@@ -39,6 +41,14 @@ const getStoredHistory = (playerName: string): ScoreEntry[] => {
   return [];
 };
 
+const COLORS = [
+  { value: "red", label: "Red" },
+  { value: "blue", label: "Blue" },
+  { value: "green", label: "Green" },
+  { value: "yellow", label: "Yellow" },
+  { value: "black", label: "Black" },
+];
+
 export function Player({
   initialName,
   initialColor,
@@ -60,11 +70,6 @@ export function Player({
     localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
     onScoreChange(scoreHistory);
   }, [scoreHistory, name]);
-
-  const handleColorChange = (value: string | null, option: ComboboxItem) => {
-    setSelectedColor(value || "");
-    onColorChange(value || "");
-  };
 
   const handleAddPoints = () => {
     if (trackPoints > 0) {
@@ -100,6 +105,24 @@ export function Player({
       localStorage.setItem(`scoreHistory_${value}`, history);
       localStorage.removeItem(`scoreHistory_${oldName}`);
     }
+  };
+
+  const handleNextColor = () => {
+    const currentIndex = COLORS.findIndex(
+      (color) => color.value === selectedColor,
+    );
+    const nextIndex = (currentIndex + 1) % COLORS.length;
+    setSelectedColor(COLORS[nextIndex].value);
+    onColorChange(COLORS[nextIndex].value);
+  };
+
+  const handlePreviousColor = () => {
+    const currentIndex = COLORS.findIndex(
+      (color) => color.value === selectedColor,
+    );
+    const previousIndex = (currentIndex - 1 + COLORS.length) % COLORS.length;
+    setSelectedColor(COLORS[previousIndex].value);
+    onColorChange(COLORS[previousIndex].value);
   };
 
   const { background, button, text, darker } =
@@ -250,19 +273,34 @@ export function Player({
           )}
         </List>
       </ScrollArea>
-      <Select
-        size={isMobile ? "xs" : "md"}
-        data={[
-          { value: "red", label: "Red" },
-          { value: "blue", label: "Blue" },
-          { value: "green", label: "Green" },
-          { value: "yellow", label: "Yellow" },
-          { value: "black", label: "Black" },
-        ]}
-        onChange={handleColorChange}
-        value={selectedColor}
-        style={{ flex: isMobile ? 3 : 2 }}
-      />
+      <Group>
+        <ActionIcon
+          size={isMobile ? "xs" : "lg"}
+          variant="subtle"
+          onClick={handlePreviousColor}
+          style={{ color: button }}
+        >
+          <IconChevronLeft />
+        </ActionIcon>
+        <Text
+          style={{
+            flex: 1,
+            textAlign: "center",
+            color: darker,
+            display: isMobile ? "none" : "block",
+          }}
+        >
+          {COLORS.find((color) => color.value === selectedColor)?.label}
+        </Text>
+        <ActionIcon
+          size={isMobile ? "xs" : "lg"}
+          variant="subtle"
+          onClick={handleNextColor}
+          style={{ color: button }}
+        >
+          <IconChevronRight />
+        </ActionIcon>
+      </Group>
     </Paper>
   );
 }
