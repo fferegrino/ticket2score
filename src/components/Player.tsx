@@ -85,13 +85,11 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
     <Paper shadow="xs" p="md" withBorder style={{ backgroundColor: background }}>
       <Group align="flex-end" mb="md">
         <TextInput
-          label="Player Name"
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          style={{ flex: 3 }}
+          style={{ flex: 3, backgroundColor: background, }}
         />
         <Select
-          label="Color"
           data={[
             { value: 'red', label: 'Red' },
             { value: 'blue', label: 'Blue' },
@@ -129,14 +127,14 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
       <ScrollArea h={350}>
         <List spacing="xs" size="sm" center>
           {scoreHistory.length === 0 ? (
-            <Text c="dimmed" ta="center" fz="sm">No points added yet</Text>
+            <Text c="dimmed" ta="center" fz="sm">No carts added yet</Text>
           ) : (
             scoreHistory.map((entry, index) => (
               <List.Item
                 key={index}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <span>+{entry.points} points ({entry.timestamp.toLocaleTimeString()})</span>
+                <span>+{entry.points} carts ({entry.timestamp.toLocaleTimeString()})</span>
                 <ActionIcon 
                   color={button} 
                   onClick={() => handleDeleteEntry(scoreHistory.length - 1 - index)}

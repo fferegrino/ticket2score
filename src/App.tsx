@@ -65,8 +65,8 @@ function App() {
 
   const resetGame = () => {
     setPlayers([
-      { name: 'Player 1', score: 0, color: 'black' },
-      { name: 'Player 2', score: 0, color: 'black' }
+      { name: 'Player 1', score: 0, color: '' },
+      { name: 'Player 2', score: 0, color: '' }
     ]);
   };
 
