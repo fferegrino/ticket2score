@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextInput, Button, Paper, Group, Text, List, ScrollArea, Select, ComboboxItem, ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 
@@ -15,11 +15,23 @@ interface ScoreEntry {
   timestamp: Date;
 }
 
+const getStoredHistory = (playerName: string): ScoreEntry[] => {
+  const stored = localStorage.getItem(`scoreHistory_${playerName}`);
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    return parsed.map((entry: any) => ({
+      ...entry,
+      timestamp: new Date(entry.timestamp)
+    }));
+  }
+  return [];
+};
+
 export function Player({ initialName, initialColor, onNameChange, onColorChange, onScoreChange }: PlayerProps) {
   const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   const [name, setName] = useState(initialName);
   const [trackPoints, setTrackPoints] = useState(0);
-  const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>([]);
+  const [scoreHistory, setScoreHistory] = useState<ScoreEntry[]>(() => getStoredHistory(initialName));
 
   const scoreMap: Record<number, number> = {
     1: 1,
@@ -30,6 +42,11 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
     6: 15,
   }
 
+  useEffect(() => {
+    localStorage.setItem(`scoreHistory_${name}`, JSON.stringify(scoreHistory));
+    onScoreChange(scoreHistory.reduce((total, entry) => total + scoreMap[entry.points], 0));
+  }, [scoreHistory, name]);
+
   const handleColorChange = (value: string | null, option: ComboboxItem) => {
     setSelectedColor(value || '');
     onColorChange(value || '');
@@ -37,22 +54,26 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange,
 
   const handleAddPoints = () => {
     if (trackPoints > 0) {
-      const newHistory = [...scoreHistory, { points: trackPoints, timestamp: new Date() }];
-      setScoreHistory(newHistory);
+      setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
       setTrackPoints(0);
-      onScoreChange(newHistory.reduce((total, entry) => total + scoreMap[entry.points], 0));
     }
   };
 
   const handleDeleteEntry = (index: number) => {
-    const newHistory = scoreHistory.filter((_, i) => i !== index);
-    setScoreHistory(newHistory);
-    onScoreChange(newHistory.reduce((total, entry) => total + scoreMap[entry.points], 0));
+    setScoreHistory(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleNameChange = (value: string) => {
+    const oldName = name;
     setName(value);
     onNameChange(value);
+    
+    // Move score history to new name key
+    const history = localStorage.getItem(`scoreHistory_${oldName}`);
+    if (history) {
+      localStorage.setItem(`scoreHistory_${value}`, history);
+      localStorage.removeItem(`scoreHistory_${oldName}`);
+    }
   };
 
   return (

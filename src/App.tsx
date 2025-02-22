@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Container, Title, SimpleGrid, Button, Group } from '@mantine/core'
 import { Player } from './components/Player'
 import { Scoreboard } from './components/Scoreboard'
@@ -9,11 +9,25 @@ interface PlayerData {
   color: string;
 }
 
-function App() {
-  const [players, setPlayers] = useState<PlayerData[]>([
+const STORAGE_KEY = 'ticketToRideState';
+
+const getInitialState = (): PlayerData[] => {
+  const savedState = localStorage.getItem(STORAGE_KEY);
+  if (savedState) {
+    return JSON.parse(savedState);
+  }
+  return [
     { name: 'Player 1', score: 0, color: '' },
     { name: 'Player 2', score: 0, color: '' }
-  ]);
+  ];
+};
+
+function App() {
+  const [players, setPlayers] = useState<PlayerData[]>(getInitialState);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+  }, [players]);
 
   const addPlayer = () => {
     if (players.length < 5) {
@@ -49,11 +63,27 @@ function App() {
     setPlayers(newPlayers);
   };
 
+  const resetGame = () => {
+    setPlayers([
+      { name: 'Player 1', score: 0, color: '' },
+      { name: 'Player 2', score: 0, color: '' }
+    ]);
+  };
+
+  const clearAllData = () => {
+    // Clear all player histories
+    for (const player of players) {
+      localStorage.removeItem(`scoreHistory_${player.name}`);
+    }
+    // Clear game state
+    localStorage.removeItem(STORAGE_KEY);
+    // Reset to initial state
+    resetGame();
+  };
+
   return (
     <Container size="xl" py="xl">
-
       <Scoreboard players={players} />
-
 
       <SimpleGrid cols={{ base: 1, sm: 2, md: players.length }} spacing="md" mb="xl">
         {players.map((player, index) => (
@@ -68,13 +98,23 @@ function App() {
         ))}
       </SimpleGrid>
 
-      <Group justify="center">
-        <Button onClick={addPlayer} disabled={players.length >= 5}>
-          Add Player
-        </Button>
-        <Button onClick={removePlayer} disabled={players.length <= 2} color="red">
-          Remove Player
-        </Button>
+      <Group justify="center" gap="md">
+        <Group>
+          <Button onClick={addPlayer} disabled={players.length >= 5}>
+            Add Player
+          </Button>
+          <Button onClick={removePlayer} disabled={players.length <= 2} color="red">
+            Remove Player
+          </Button>
+        </Group>
+        <Group>
+          <Button onClick={resetGame} color="orange">
+            New Game
+          </Button>
+          <Button onClick={clearAllData} color="red" variant="outline">
+            Clear All Data
+          </Button>
+        </Group>
       </Group>
     </Container>
   )
