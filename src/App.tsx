@@ -1,13 +1,27 @@
 import { useState } from 'react'
 import { Container, Title, SimpleGrid, Button, Group } from '@mantine/core'
 import { Player } from './components/Player'
+import { Scoreboard } from './components/Scoreboard'
+
+interface PlayerData {
+  name: string;
+  score: number;
+  color: string;
+}
 
 function App() {
-  const [players, setPlayers] = useState(['Player 1', 'Player 2']);
+  const [players, setPlayers] = useState<PlayerData[]>([
+    { name: 'Player 1', score: 0, color: '' },
+    { name: 'Player 2', score: 0, color: '' }
+  ]);
 
   const addPlayer = () => {
     if (players.length < 5) {
-      setPlayers([...players, `Player ${players.length + 1}`]);
+      setPlayers([...players, { 
+        name: `Player ${players.length + 1}`, 
+        score: 0,
+        color: ''
+      }]);
     }
   };
 
@@ -19,7 +33,19 @@ function App() {
 
   const handleNameChange = (index: number, name: string) => {
     const newPlayers = [...players];
-    newPlayers[index] = name;
+    newPlayers[index].name = name;
+    setPlayers(newPlayers);
+  };
+
+  const handleColorChange = (index: number, color: string) => {
+    const newPlayers = [...players];
+    newPlayers[index].color = color;
+    setPlayers(newPlayers);
+  };
+
+  const handleScoreChange = (index: number, score: number) => {
+    const newPlayers = [...players];
+    newPlayers[index].score = score;
     setPlayers(newPlayers);
   };
 
@@ -28,6 +54,8 @@ function App() {
       <Title ta="center" mb="xl">
         Ticket to Ride Score Tracker
       </Title>
+
+      <Scoreboard players={players} />
 
       <Group justify="center" mb="xl">
         <Button onClick={addPlayer} disabled={players.length >= 5}>
@@ -42,8 +70,11 @@ function App() {
         {players.map((player, index) => (
           <Player
             key={index}
-            initialName={player}
+            initialName={player.name}
+            initialColor={player.color}
             onNameChange={(name) => handleNameChange(index, name)}
+            onColorChange={(color) => handleColorChange(index, color)}
+            onScoreChange={(score) => handleScoreChange(index, score)}
           />
         ))}
       </SimpleGrid>

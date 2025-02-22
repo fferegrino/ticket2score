@@ -7,6 +7,7 @@ interface PlayerProps {
   initialColor: string;
   onNameChange: (name: string) => void;
   onColorChange: (color: string) => void;
+  onScoreChange: (score: number) => void;
 }
 
 interface ScoreEntry {
@@ -14,7 +15,7 @@ interface ScoreEntry {
   timestamp: Date;
 }
 
-export function Player({ initialName, initialColor, onNameChange, onColorChange }: PlayerProps) {
+export function Player({ initialName, initialColor, onNameChange, onColorChange, onScoreChange }: PlayerProps) {
   const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   const [name, setName] = useState(initialName);
   const [trackPoints, setTrackPoints] = useState(0);
@@ -29,13 +30,17 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange 
 
   const handleAddPoints = () => {
     if (trackPoints > 0) {
-      setScoreHistory(prev => [...prev, { points: trackPoints, timestamp: new Date() }]);
+      const newHistory = [...scoreHistory, { points: trackPoints, timestamp: new Date() }];
+      setScoreHistory(newHistory);
       setTrackPoints(0);
+      onScoreChange(newHistory.reduce((total, entry) => total + entry.points, 0));
     }
   };
 
   const handleDeleteEntry = (index: number) => {
-    setScoreHistory(prev => prev.filter((_, i) => i !== index));
+    const newHistory = scoreHistory.filter((_, i) => i !== index);
+    setScoreHistory(newHistory);
+    onScoreChange(newHistory.reduce((total, entry) => total + entry.points, 0));
   };
 
   const handleNameChange = (value: string) => {
@@ -67,6 +72,7 @@ export function Player({ initialName, initialColor, onNameChange, onColorChange 
             { value: '#b8b8b8', label: 'Black' },
           ]}
           onChange={handleColorChange}
+          value={selectedColor}
         />
       </Group>
       
