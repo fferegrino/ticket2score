@@ -15,6 +15,7 @@ import {
   IconTrash,
   IconChevronLeft,
   IconChevronRight,
+  IconTrack,
 } from "@tabler/icons-react";
 import { colorMap } from "../colors";
 import { ScoreEntry } from "../ScoreEntry";
@@ -245,7 +246,7 @@ export function Player({
                   }}
                 >
                   <Group gap={isMobile ? "2" : "md"}>
-                    <ActionIcon
+                    {/* <ActionIcon
                       variant={isMobile ? "subtle" : "filled"}
                       // style={{ display: isMobile ? "none" : "block" }}
                       color={button}
@@ -255,7 +256,7 @@ export function Player({
                       size="xs"
                     >
                       <IconTrash size={isMobile ? "1rem" : "1.5rem"} />
-                    </ActionIcon>
+                    </ActionIcon> */}
                     <Text
                       size={isMobile ? "md" : "xl"}
                       style={{
@@ -268,8 +269,22 @@ export function Player({
                         handleDeleteEntry(scoreHistory.length - 1 - index)
                       }
                     >
-                      {entry.points} carts
+                      {entry.points}
                     </Text>
+                    <ActionIcon
+                      variant="subtle"
+                      // style={{ display: isMobile ? "none" : "block" }}
+                      color={button}
+                      onClick={() =>
+                        handleDeleteEntry(scoreHistory.length - 1 - index)
+                      }
+                      size={isMobile ? "xs" : "lg"}
+                    >
+                      <IconTrack
+                        color={darker}
+                        size={isMobile ? "1rem" : "1.5rem"}
+                      />
+                    </ActionIcon>
                   </Group>
                 </List.Item>
               ))
