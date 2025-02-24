@@ -151,14 +151,17 @@ export function Player({
         onChange={(e) => handleNameChange(e.target.value)}
         mb={isMobile ? "xs" : "xs"}
         styles={{
-          root: { flex: 3 },
           input: {
-            background: background,
+            background: "#FFF",
             color: darker,
+            borderRadius: "0px",
             border: "none",
             fontWeight: "bold",
-            fontSize: isMobile ? "1rem" : "1.5rem",
-            padding: "0rem",
+            fontSize: isMobile ? "0.9rem" : "1.5rem",
+            lineHeight: "0.5rem !important",
+            padding: "1px 10px 0px 10px",
+            paddingBottom: "0px !important",
+            borderBottom: `1px solid ${button}`,
           },
         }}
       />
