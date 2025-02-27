@@ -269,17 +269,17 @@ export function Player({
                         margin: 0,
                       }}
                       onClick={() =>
-                        handleDeleteEntry(scoreHistory.length - 1 - index)
+                        handleDeleteEntry(index)
                       }
                     >
-                      {entry.points}
+                      {index}. {entry.points}
                     </Text>
                     <ActionIcon
                       variant="subtle"
                       // style={{ display: isMobile ? "none" : "block" }}
                       color={button}
                       onClick={() =>
-                        handleDeleteEntry(scoreHistory.length - 1 - index)
+                        handleDeleteEntry(index)
                       }
                       size={isMobile ? "xs" : "lg"}
                     >
