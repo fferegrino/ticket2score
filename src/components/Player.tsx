@@ -272,7 +272,7 @@ export function Player({
                         handleDeleteEntry(index)
                       }
                     >
-                      {index}. {entry.points}
+                      {entry.points}
                     </Text>
                     <ActionIcon
                       variant="subtle"
